@@ -1,5 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import Message
+from fuzzywuzzy import process
 
 from bot import messages
 from models import Item
@@ -32,4 +33,13 @@ async def search_by_code(code: str) -> list[Item]:
 
 
 async def search_by_name(name: str) -> list[Item]:
-    pass
+    all_items: list[Item] = await Item.get_all()
+    
+    names_to_items = {item.name: item for item in all_items}
+    search_results: list[tuple[Item, int, str]] = process.extract(
+        name,
+        names_to_items
+    ) # type: ignore
+
+    relevant_items = [result[0] for result in search_results]
+    return relevant_items
