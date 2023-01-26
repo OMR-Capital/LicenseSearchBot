@@ -1,7 +1,5 @@
-import re
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.types import Message
-
 
 from bot import messages
 from models import Item
@@ -15,7 +13,7 @@ router = Router()
 async def search_handler(message: Message):
     if not message.text:
         return
-    
+
     wait_message = await message.answer(messages.WAIT_SEARCH)
 
     items: list[Item]
@@ -34,7 +32,7 @@ async def search_handler(message: Message):
 
 
 async def search_by_code(code: str) -> list[Item]:
-    items: list[Item] = await Item.query(Item.code == code)    
+    items: list[Item] = await Item.query(Item.code == code)
     return items
 
 
@@ -42,5 +40,5 @@ async def search_by_name(name: str) -> list[Item]:
     items: list[Item] = await Item.get_all()
     direct_search_result = set(direct_search(name, items))
     fuzzy_search_result = set(fuzzy_search(name, items))
-    relevant_items = direct_search_result & fuzzy_search_result
+    relevant_items = direct_search_result | fuzzy_search_result
     return list(relevant_items)

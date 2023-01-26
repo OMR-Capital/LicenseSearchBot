@@ -7,9 +7,8 @@ from search_utils.utils import normalize
 def fuzzy_search(query: str, items: list[Item]) -> list[Item]:
     query = normalize(query)    
 
-
     search_results: list[tuple[Item, int]] = [
-        (item, fuzz.partial_ratio(query, item.name))
+        (item, fuzz.partial_token_sort_ratio(query, item.name))
         for item in items
     ]
     search_results.sort(key=lambda r: r[1], reverse=True)
