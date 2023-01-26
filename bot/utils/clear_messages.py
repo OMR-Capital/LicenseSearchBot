@@ -24,3 +24,4 @@ async def clear_messages(messages_package_key: str):
         except TelegramBadRequest:
             continue
     
+    await messages_package.delete()
