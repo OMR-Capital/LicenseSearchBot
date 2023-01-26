@@ -1,5 +1,4 @@
-from .direct_search import direct_search
-from .fuzzy_search import fuzzy_search
+from .search import get_items_by_code, get_items_by_name
 
 
-__all__ = ['direct_search', 'fuzzy_search']
+__all__ = ['get_items_by_code', 'get_items_by_name']
