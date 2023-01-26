@@ -1,0 +1,12 @@
+from odetam.async_model import AsyncDetaModel
+
+
+class Item(AsyncDetaModel):
+    name: str
+    code: str
+    hazard: str
+    allowed_works: list[str]
+    address: str
+
+    class Config:
+        table_name = 'items'
