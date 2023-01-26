@@ -13,6 +13,6 @@ def fuzzy_search(query: str, items: list[Item]) -> list[Item]:
     ]
     search_results.sort(key=lambda r: r[1], reverse=True)
 
-    relevant_items = [item for item, score in search_results if score > 80]
+    relevant_items = [item for item, score in search_results if score > 75]
     return relevant_items
     

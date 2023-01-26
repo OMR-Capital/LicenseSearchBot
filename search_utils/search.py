@@ -11,7 +11,12 @@ async def get_items_by_code(code: str) -> list[Item]:
 
 async def get_items_by_name(name: str) -> list[Item]:
     items: list[Item] = await Item.get_all()
-    direct_search_result = set(direct_search(name, items))
-    fuzzy_search_result = set(fuzzy_search(name, items))
-    relevant_items = direct_search_result | fuzzy_search_result
-    return list(relevant_items)
+    direct_search_result = direct_search(name, items)
+    fuzzy_search_result = fuzzy_search(name, items)
+    
+    relevant_items = direct_search_result.copy()
+    for item in fuzzy_search_result:
+        if item not in relevant_items:
+            relevant_items.append(item)
+
+    return relevant_items
