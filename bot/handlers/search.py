@@ -1,9 +1,11 @@
+import re
 from aiogram import Router, F
 from aiogram.types import Message
-from fuzzywuzzy import process
+
 
 from bot import messages
 from models import Item
+from search_utils import direct_search, fuzzy_search
 
 
 router = Router()
@@ -14,6 +16,8 @@ async def search_handler(message: Message):
     if not message.text:
         return
     
+    wait_message = await message.answer(messages.WAIT_SEARCH)
+
     items: list[Item]
     if message.text.isdigit():
         items = await search_by_code(message.text)
@@ -26,6 +30,8 @@ async def search_handler(message: Message):
     else:
         await message.answer(messages.ITEMS_NOT_FOUND)
 
+    await wait_message.delete()
+
 
 async def search_by_code(code: str) -> list[Item]:
     items: list[Item] = await Item.query(Item.code == code)    
@@ -33,13 +39,8 @@ async def search_by_code(code: str) -> list[Item]:
 
 
 async def search_by_name(name: str) -> list[Item]:
-    all_items: list[Item] = await Item.get_all()
-    
-    names_to_items = {item.name: item for item in all_items}
-    search_results: list[tuple[Item, int, str]] = process.extract(
-        name,
-        names_to_items
-    ) # type: ignore
-
-    relevant_items = [result[0] for result in search_results]
-    return relevant_items
+    items: list[Item] = await Item.get_all()
+    direct_search_result = set(direct_search(name, items))
+    fuzzy_search_result = set(fuzzy_search(name, items))
+    relevant_items = direct_search_result & fuzzy_search_result
+    return list(relevant_items)
