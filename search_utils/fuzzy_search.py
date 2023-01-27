@@ -6,13 +6,19 @@ from search_utils.utils import normalize
 
 def fuzzy_search(query: str, items: list[Item]) -> list[Item]:
     query = normalize(query)    
+    query_words = query.split()
+    min_score = len(query_words) * 81
 
-    search_results: list[tuple[Item, int]] = [
-        (item, fuzz.partial_token_sort_ratio(query, item.name))
-        for item in items
-    ]
-    search_results.sort(key=lambda r: r[1], reverse=True)
+    scored_items: list[tuple[Item, int]] = []   
+    for item in items:
+        score = 0
+        item_name = normalize(item.name)
+        for word in query_words:
+            score += fuzz.partial_ratio(word, item_name) # type: ignore
+        
+        if score >= min_score:
+            scored_items.append((item, score))
 
-    relevant_items = [item for item, score in search_results if score > 75]
+    scored_items.sort(key=lambda pair: pair[1], reverse=True)
+    relevant_items = [item for item, score in scored_items]
     return relevant_items
-    

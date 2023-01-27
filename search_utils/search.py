@@ -16,7 +16,7 @@ async def get_items_by_name(name: str) -> list[Item]:
     
     relevant_items = direct_search_result.copy()
     for item in fuzzy_search_result:
-        if item not in relevant_items:
+        if item not in direct_search_result:
             relevant_items.append(item)
 
     return relevant_items
