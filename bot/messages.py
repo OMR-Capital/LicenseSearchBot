@@ -20,3 +20,6 @@ def get_item_form(item: Item) -> str:
 <b>Адреса:</b> {item.address}
 '''
 
+
+def get_items_form(items: list[Item]) -> str:
+    return '\n\n'.join(get_item_form(item) for item in items)

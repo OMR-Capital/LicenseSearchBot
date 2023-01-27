@@ -1,6 +1,6 @@
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import CallbackQuery, Message
 
 from bot import messages
 from bot.callbacks.search import StartSearchCallback
@@ -17,7 +17,7 @@ router = Router()
 @router.callback_query(StartSearchCallback.filter())
 async def start_search_handler(query: CallbackQuery, callback_data: StartSearchCallback, state: FSMContext):
     await query.answer()
-
+    
     if callback_data.previous_package_key:
         await clear_messages(callback_data.previous_package_key)
 
@@ -38,15 +38,17 @@ async def query_handler(message: Message, state: FSMContext):
     wait_message = await message.answer(messages.WAIT_SEARCH)
 
     items: list[Item]
-    if message.text.isdigit():
+    if message.text.isdigit() and len(message.text) > 9:
         items = await get_items_by_code(message.text)
     else:
         items = await get_items_by_name(message.text)
 
     search_messages_ids: list[int] = [message.message_id, wait_message.message_id]
     if items:
-        for item in items:
-            msg = await message.answer(messages.get_item_form(item))
+        items = items[:30]
+        for i in range(0, len(items), 10):
+            items_slice = items[i:i + 10]
+            msg = await message.answer(messages.get_items_form(items_slice))
             search_messages_ids.append(msg.message_id)
     else:
         msg = await message.answer(messages.ITEMS_NOT_FOUND)
@@ -68,4 +70,3 @@ async def query_handler(message: Message, state: FSMContext):
         reply_markup=start_search_kb(search_messages_package.key)
     )
     await state.clear()
-
