@@ -11,12 +11,3 @@ class Item(AsyncDetaModel):
 
     class Config:
         table_name = 'items'
-
-    def __hash__(self) -> int:
-        return int(self.code)
-
-    def __eq__(self, other: Any) -> bool: 
-        if isinstance(other, Item):
-            return self.code == other.code
-        
-        return False
