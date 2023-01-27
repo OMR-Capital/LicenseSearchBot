@@ -12,14 +12,14 @@ SEARCH_FINISHED = 'Поиск завершен.'
 def get_item_form(item: Item) -> str:
     works_str = ', '.join(item.allowed_works)
     return f'''
-<b>Номер:</b> {item.key}
-<b>Наименование:</b> {item.name}
-<b>Код по ФККО:</b> {item.code}
-<b>Класс опасности отхода:</b> {item.hazard}
-<b>Виды работ:</b> {works_str}
-<b>Адреса:</b> {item.address}
+<b>Номер:</b> <code>{item.key}</code>
+<b>Наименование:</b> <code>{item.name}</code>
+<b>Код по ФККО:</b> <code>{item.code}</code>
+<b>Класс опасности отхода:</b> <code>{item.hazard}</code>
+<b>Виды работ:</b> <code>{works_str}</code>
+<b>Адреса:</b> <code>{item.address}</code>
 '''
 
 
 def get_items_form(items: list[Item]) -> str:
-    return '\n\n'.join(get_item_form(item) for item in items)
+    return '\n'.join(get_item_form(item) for item in items)
