@@ -7,7 +7,7 @@ from search_utils.utils import normalize
 def fuzzy_search(query: str, items: list[Item]) -> list[Item]:
     query = normalize(query)    
     query_words = query.split()
-    min_score = len(query_words) * 81
+    min_score = len(query_words) * 85
 
     scored_items: list[tuple[Item, int]] = []   
     for item in items:
