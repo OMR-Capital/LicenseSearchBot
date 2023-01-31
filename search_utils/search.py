@@ -4,6 +4,15 @@ from search_utils.direct_search import direct_search
 from models import Item
 
 
+
+async def get_items_by_query(query: str) -> list[Item]:
+    prepared_query = query.replace(' ', '').strip()
+    if prepared_query.isdigit() and len(prepared_query) > 9:
+        return await get_items_by_code(prepared_query)
+    else:
+        return await get_items_by_name(query)
+
+
 async def get_items_by_code(code: str) -> list[Item]:
     items: list[Item] = await Item.query(Item.code == code)
     return items

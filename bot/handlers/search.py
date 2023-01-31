@@ -9,6 +9,7 @@ from bot.states.search import SearchState
 from bot.utils.clear_messages import clear_messages
 from models import Item, MessagesPackage
 from search_utils import get_items_by_name, get_items_by_code
+from search_utils.search import get_items_by_query
 
 
 router = Router()
@@ -37,11 +38,7 @@ async def query_handler(message: Message, state: FSMContext):
 
     wait_message = await message.answer(messages.WAIT_SEARCH)
 
-    items: list[Item]
-    if message.text.isdigit() and len(message.text) > 9:
-        items = await get_items_by_code(message.text)
-    else:
-        items = await get_items_by_name(message.text)
+    items = await get_items_by_query(message.text)
 
     search_messages_ids: list[int] = [message.message_id, wait_message.message_id]
     if items:
