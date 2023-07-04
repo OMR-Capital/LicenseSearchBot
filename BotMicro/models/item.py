@@ -8,6 +8,7 @@ class Item(AsyncDetaModel):
     hazard: str
     allowed_works: list[str]
     address: str
+    company: str
 
     class Config:
         table_name = 'items'

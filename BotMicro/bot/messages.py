@@ -10,15 +10,19 @@ SEARCH_FINISHED = 'Поиск завершен.'
 
 
 def get_item_form(item: Item) -> str:
-    works_str = ', '.join(item.allowed_works)
-    return f'''
-<b>Номер:</b> <code>{item.key}</code>
+    works = ', '.join(item.allowed_works)
+
+    text = f'''
 <b>Наименование:</b> <code>{item.name}</code>
 <b>Код по ФККО:</b> <code>{item.code}</code>
 <b>Класс опасности отхода:</b> <code>{item.hazard}</code>
-<b>Виды работ:</b> <code>{works_str}</code>
-<b>Адреса:</b> <code>{item.address}</code>
+<b>Виды работ:</b> <code>{works}</code>
 '''
+    if item.address:
+        text += f'<b>Адреса:</b> <code>{item.address}</code>\n'
+
+    text += f'<b>Организация:</b> <code>{item.company}</code>\n'
+    return text
 
 
 def get_items_form(items: list[Item]) -> str:
