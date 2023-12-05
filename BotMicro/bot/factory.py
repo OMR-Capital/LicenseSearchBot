@@ -1,12 +1,12 @@
 from os import getenv
 
 from aiogram import Bot, Dispatcher
-from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 from aiogram_deta.storage import DefaultKeyBuilder, DetaStorage
 from deta import Deta
 
 from bot.handlers import router as root_router
 from bot.middlewares.logging import LoggingMiddleware
+from bot.middlewares.callback_answer import CallbackAnswerMiddleware
 from utils.env_parse import parse_bool, parse_optional_int
 
 
