@@ -10,14 +10,16 @@ SEARCH_FINISHED = 'Поиск завершен.'
 
 
 def get_item_form(item: Item) -> str:
-    works = ', '.join(item.allowed_works)
+    text = ''
+    text += f'<b>Наименование:</b> <code>{item.name}</code>\n'
+    text += f'<b>Код по ФККО:</b> <code>{item.code}</code>\n'
 
-    text = f'''
-<b>Наименование:</b> <code>{item.name}</code>
-<b>Код по ФККО:</b> <code>{item.code}</code>
-<b>Класс опасности отхода:</b> <code>{item.hazard}</code>
-<b>Виды работ:</b> <code>{works}</code>
-'''
+    if item.hazard is not None:
+        text += f'<b>Класс опасности отхода:</b> <code>{item.hazard}</code>\n'
+
+    works = ', '.join(item.allowed_works)
+    text += f'<b>Виды работ:</b> <code>{works}</code>\n'
+
     if item.address:
         text += f'<b>Адреса:</b> <code>{item.address}</code>\n'
 
